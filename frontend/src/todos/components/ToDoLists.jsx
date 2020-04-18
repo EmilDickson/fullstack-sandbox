@@ -9,30 +9,18 @@ import ReceiptIcon from '@material-ui/icons/Receipt'
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-const getPersonalTodos = () => {
-  return sleep(1000).then(() => Promise.resolve({
-    '0000000001': {
-      id: '0000000001',
-      title: 'First List',
-      todos: ['First todo of first list!']
-    },
-    '0000000002': {
-      id: '0000000002',
-      title: 'Second List',
-      todos: ['First todo of second list!']
-    }
-  }))
-}
-
 export const ToDoLists = ({ style }) => {
   const [toDoLists, setToDoLists] = useState({})
   const [activeList, setActiveList] = useState()
 
   useEffect(() => {
-    getPersonalTodos()
-      .then(setToDoLists)
+    fetch(
+      'http://localhost:3001/allTodos'
+    ).then((response) => {
+      return response.json();
+    }).then(data => { 
+      setToDoLists(data)
+    });
   }, [])
 
   if (!Object.keys(toDoLists).length) return null
@@ -63,6 +51,18 @@ export const ToDoLists = ({ style }) => {
       toDoList={toDoLists[activeList]}
       saveToDoList={(id, { todos }) => {
         const listToUpdate = toDoLists[id]
+        fetch('http://localhost:3001/allTodos', {
+          mode: 'no-cors',
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'listId': id,
+            'todo': todos
+          })
+        })
         setToDoLists({
           ...toDoLists,
           [id]: { ...listToUpdate, todos }

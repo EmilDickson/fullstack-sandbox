@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { TextField, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core'
+import { TextField, Card, CardContent, CardActions, Button, Typography, Switch } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import { debounce } from 'lodash'
@@ -35,8 +35,10 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
     saveToDoList(toDoList.id, { todos })
   }
 
-  const saveUpdatedList = (newTodo, index) => {
+  const updateTodoText = (newTodoText, index) => {
     const timeout = 300;
+    let newTodo = {...todos[index]}
+    newTodo.text = newTodoText;
     const newTodos = [
       ...todos.slice(0, index),
       newTodo,
@@ -55,18 +57,36 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
           {toDoList.title}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form}>
-          {todos.map((name, index) => (
+          {todos.map((todo, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='h6'>
                 {index + 1}
               </Typography>
               <TextField
                 label='What to do?'
-                value={name}
+                value={todo.text ? todo.text : ''}
                 onChange={event => {
-                  saveUpdatedList(event.target.value, index);
+                  updateTodoText(event.target.value, index);
                 }}
                 className={classes.textField}
+              />
+              <Typography>Done?</Typography>
+              <Switch
+                value="checkedA"
+                checked={todo.done ? true : false}
+                color="primary"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+                onChange={() => {
+                  let newTodo = {...todo};
+                  newTodo.done = !todo.done;
+                  const newTodos = [
+                    ...todos.slice(0, index),
+                    newTodo,
+                    ...todos.slice(index + 1)
+                  ];
+                  setTodos(newTodos);
+                  saveToDoList(toDoList.id, { todos: newTodos })
+                }}
               />
               <Button
                 size='small'

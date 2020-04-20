@@ -64,7 +64,7 @@ export const ToDoLists = ({ style }) => {
         })
         .then(res => {
           if (res.status === 200) {
-            console.log("saved todo");
+            return res;
           }
         })
         setToDoLists({

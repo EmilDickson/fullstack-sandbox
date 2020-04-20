@@ -13,12 +13,12 @@ let allTodos = {
     '0000000001': {
       id: '0000000001',
       title: 'First List',
-      todos: ['First todo of first list from backend!']
+      todos: [{ done: false, text: 'First todo of first list from backend!' }]
     },
     '0000000002': {
       id: '0000000002',
       title: 'Second List',
-      todos: ['First todo of second list from backend!']
+      todos: [{ done: false, text: 'First todo of second list from backend!'}]
     }
 };
 

@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const app = express()
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
 const PORT = 3001
@@ -28,10 +27,10 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/allTodos', (req, res) => res.status(200).send(allTodos));
 
 app.post('/allTodos', (req, res) => {
-    console.log("body looks like: ", req.body);
-    const listId = req.body.listId;
+    const listId = req.body.listToUpdate.id;
     const newTodos = req.body.todos;
     allTodos[listId].todos = newTodos;
+    res.status(200).send("done!")
 })
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))

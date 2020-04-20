@@ -52,16 +52,20 @@ export const ToDoLists = ({ style }) => {
       saveToDoList={(id, { todos }) => {
         const listToUpdate = toDoLists[id]
         fetch('http://localhost:3001/allTodos', {
-          mode: 'no-cors',
           method: 'post',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
           },
           body: JSON.stringify({
-            'listId': id,
-            'todo': todos
+            listToUpdate,
+            todos
           })
+        })
+        .then(res => {
+          if (res.status === 200) {
+            console.log("saved todo");
+          }
         })
         setToDoLists({
           ...toDoLists,

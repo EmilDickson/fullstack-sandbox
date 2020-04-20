@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
 
@@ -23,6 +24,15 @@ export const ToDoLists = ({ style }) => {
     });
   }, [])
 
+  const listDone = (todoList) => {
+    for (let i = 0; i < todoList.todos.length; i++) {
+      if (!todoList.todos[i].done) {
+        return false
+      }
+    }
+    return true
+  }
+
   if (!Object.keys(toDoLists).length) return null
   return <Fragment>
     <Card style={style}>
@@ -39,7 +49,7 @@ export const ToDoLists = ({ style }) => {
             onClick={() => setActiveList(key)}
           >
             <ListItemIcon>
-              <ReceiptIcon />
+              {listDone(toDoLists[key]) ? <CheckCircleIcon style={{ color: 'green' }} /> : <ReceiptIcon />}
             </ListItemIcon>
             <ListItemText primary={toDoLists[key].title} />
           </ListItem>)}

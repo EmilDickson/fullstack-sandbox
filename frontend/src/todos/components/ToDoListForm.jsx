@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { TextField, Card, CardContent, CardActions, Button, Typography} from '@material-ui/core'
+import { TextField, Card, CardContent, CardActions, Button, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
+import { debounce } from 'lodash'
 
 const useStyles = makeStyles({
   card: {
@@ -34,6 +35,19 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
     saveToDoList(toDoList.id, { todos })
   }
 
+  const saveUpdatedList = (newTodo, index) => {
+    const timeout = 300;
+    const newTodos = [
+      ...todos.slice(0, index),
+      newTodo,
+      ...todos.slice(index + 1)
+    ];
+    setTodos(newTodos);
+    return debounce(
+      () => saveToDoList(toDoList.id, { todos: newTodos }), timeout
+    )()
+  }
+
   return (
     <Card className={classes.card}>
       <CardContent>
@@ -50,11 +64,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 label='What to do?'
                 value={name}
                 onChange={event => {
-                  setTodos([ // immutable update
-                    ...todos.slice(0, index),
-                    event.target.value,
-                    ...todos.slice(index + 1)
-                  ])
+                  saveUpdatedList(event.target.value, index);
                 }}
                 className={classes.textField}
               />
@@ -63,10 +73,12 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 color='secondary'
                 className={classes.standardSpace}
                 onClick={() => {
-                  setTodos([ // immutable delete
+                  const newTodos = [ // immutable delete
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
-                  ])
+                  ]
+                  setTodos(newTodos);
+                  saveToDoList(toDoList.id, { todos: newTodos });
                 }}
               >
                 <DeleteIcon />

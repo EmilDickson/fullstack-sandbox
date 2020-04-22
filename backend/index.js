@@ -33,5 +33,11 @@ app.post('/allTodos', (req, res) => {
     res.status(200).send("done!")
 })
 
+app.post('/setTodoLists', (req, res) => {
+  const newLists = req.body.newLists;
+  allTodos = newLists;
+  res.status(200).send("done!");
+})
+
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
 

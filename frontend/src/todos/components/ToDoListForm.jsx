@@ -36,7 +36,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   }
 
   const updateTodoText = (newTodoText, index) => {
-    const timeout = 300;
     let newTodo = {...todos[index]}
     newTodo.text = newTodoText;
     const newTodos = [
@@ -45,9 +44,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
       ...todos.slice(index + 1)
     ];
     setTodos(newTodos);
-    return debounce(
-      () => saveToDoList(toDoList.id, { todos: newTodos }), timeout
-    )()
+    saveToDoList(toDoList.id, { todos: newTodos });
   }
 
   return (
